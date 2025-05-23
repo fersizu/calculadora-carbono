@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora CO₂</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Calculadora de Huella de Carbono</h1>
+    <form method="post">
+        <label for="km">¿Cuántos km conduces por semana?</label>
+        <input type="number" name="km" step="any" required>
+        <button type="submit">Calcular</button>
+    </form>
+
+    {% if result %}
+        <h2>{{ result }}</h2>
+    {% endif %}
+</body>
+</html>
