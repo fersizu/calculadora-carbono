@@ -1,19 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calculadora de dioxido de carbono</title>
+    <title>Calculadora de dióxido de carbono</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    {% if current_user.is_authenticated %}
+        <p>Hola, {{ current_user.username }}! <a href="{{ url_for('logout') }}">Cerrar sesión</a></p>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Iniciar sesión</a> o <a href="{{ url_for('register') }}">registrarse</a></p>
+    {% endif %}
+    
     <h1>Calculadora de Huella de Carbono</h1>
-    <form method="post">
-        <label for="km">¿Cuántos km conduces por semana?</label>
-        <input type="number" name="km" step="any" required>
-        <button type="submit">Calcular</button>
-    </form>
+    
+    {% if current_user.is_authenticated %}
+        <form method="post">
+            <label for="km">¿Cuántos km conduces por semana?</label>
+            <input type="number" name="km" step="any" required>
+            <button type="submit">Calcular</button>
+        </form>
 
-    {% if result %}
-        <h2>{{ result }}</h2>
+        {% if result %}
+            <h2>{{ result }}</h2>
+        {% endif %}
+
+        {% if history %}
+            <h2>Historial de cálculos</h2>
+            <table>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Kilómetros</th>
+                    <th>CO₂ (kg)</th>
+                </tr>
+                {% for calc in history %}
+                <tr>
+                    <td>{{ calc.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ calc.km }}</td>
+                    <td>{{ "%.2f"|format(calc.co2) }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    {% else %}
+        <p>Por favor inicia sesión para usar la calculadora y ver tu historial.</p>
     {% endif %}
 </body>
 </html>
